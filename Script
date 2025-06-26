@@ -89,7 +89,7 @@ local steps = {0.1, 0.25, 0.4, 0.6, 0.8, 1}
 local delayBetween = 0.5
 
 coroutine.wrap(function()
-	for i, progress in ipairs(steps) do
+	for _, progress in ipairs(steps) do
 		local tween = TweenService:Create(loadingBar, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
 			Size = UDim2.new(progress, 0, 1, 0)
 		})
@@ -118,6 +118,6 @@ coroutine.wrap(function()
 	screenGui:Destroy()
 
 	-- Load Spawner setelah UI hilang
-local Spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/GrowAFilippino/GrowAGarden/refs/heads/main/Spawner.lua"))()
-Spawner.Load()
+	local Spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/GrowAFilippino/GrowAGarden/refs/heads/main/Spawner.lua"))()
+	Spawner.Load()
 end)()
