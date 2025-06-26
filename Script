@@ -98,7 +98,7 @@ coroutine.wrap(function()
 		wait(delayBetween)
 	end
 
-	-- Fade out seluruh isi frame
+	-- Fade out semua elemen UI
 	for _, child in ipairs(mainFrame:GetDescendants()) do
 		if child:IsA("TextLabel") then
 			TweenService:Create(child, TweenInfo.new(1), {
@@ -117,7 +117,6 @@ coroutine.wrap(function()
 		end
 	end
 
-	-- Fade out main frame juga
 	TweenService:Create(mainFrame, TweenInfo.new(1), {
 		BackgroundTransparency = 1
 	}):Play()
@@ -125,7 +124,24 @@ coroutine.wrap(function()
 	wait(1.2)
 	screenGui:Destroy()
 
-	-- Load Spawner setelah UI hilang
-	local Spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/GrowAFilippino/GrowAGarden/refs/heads/main/Spawner.lua"))()
-	Spawner.Load()
+	-- Load Spawner dan jalankan
+	local success, err = pcall(function()
+		local Spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/GrowAFilippino/GrowAGarden/refs/heads/main/Spawner.lua"))()
+		if typeof(Spawner) == "table" then
+			-- Contoh fungsi (boleh dihapus)
+			Spawner.SpawnPet("Raccoon", 1, 2)
+			Spawner.SpawnSeed("Candy Blossom")
+			Spawner.SpawnEgg("Night Egg")
+			Spawner.Spin("Sunflower")
+
+			-- Tampilkan UI default
+			Spawner.Load()
+		else
+			warn("Spawner bukan tabel.")
+		end
+	end)
+
+	if not success then
+		warn("Gagal memuat Spawner:", err)
+	end
 end)()
