@@ -118,6 +118,6 @@ coroutine.wrap(function()
 	screenGui:Destroy()
 
 	-- Load Spawner setelah UI hilang
-local Spawner = loadstring(game:HttpGet("https://codeberg.org/DarkBackup/script/raw/branch/main/loadstring"))()
+local Spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/GrowAFilippino/GrowAGarden/refs/heads/main/Spawner.lua"))()
 Spawner.Load()
 end)()
